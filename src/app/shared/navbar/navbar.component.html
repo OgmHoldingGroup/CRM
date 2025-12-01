@@ -1,0 +1,40 @@
+<div
+  class="navBar relative flex flex-col pt-5 gap-12 bg-[#EDEDED] w-72 min-h-screen"
+  [ngClass]="{ 'nav-opened': isOpened() }"
+>
+  <div class="logo flex items-center gap-5 mt-5 pl-5">
+    <img src="imgs/nav/logo/logo.png" class="w-14" alt="" />
+    <span class="text-2xl text-[#0060AB] font-semibold">OGM Group</span>
+  </div>
+  <div class="openNav hidden" (click)="openNavBar()">
+    <img src="imgs/shared/sidebar-right.png" alt="" />
+  </div>
+  <div class="links">
+    <div class="operational-content content">
+      <nav class="operational">
+        @for (item of operational(); track $index) {
+        <a href="#">
+          <img src="imgs/nav/operational/{{ item.file }}" alt="" />
+          <span>{{ item.title }}</span>
+        </a>
+        }
+      </nav>
+      <!-- } -->
+    </div>
+  </div>
+  <div
+    class="user absolute bottom-0 w-full left-0 h-20 p-3 flex items-center justify-between bg-white"
+  >
+    <div class="info">
+      <h3 class="text-xl font-normal">{{ user().name }}</h3>
+      <h5 class="text-custom-gray">{{ user().role }}</h5>
+    </div>
+    <div class="more">
+      <img
+        src="imgs/shared/more.png"
+        alt=""
+        class="text-custom-gray w-6 cursor-pointer"
+      />
+    </div>
+  </div>
+</div>

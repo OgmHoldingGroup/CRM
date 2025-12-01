@@ -1,0 +1,112 @@
+.navBar {
+  .links {
+    .content {
+      transition: 0.5s;
+      h3 {
+        margin-bottom: 10px;
+        color: #7c7b84;
+        cursor: pointer;
+        @apply text-custom-gray pl-2;
+      }
+      img {
+        // margin-right: 15px;
+        @apply cursor-pointer;
+      }
+      nav {
+        @apply pl-5;
+        a {
+          font-weight: 400;
+          display: flex;
+          align-items: center;
+          justify-content: start;
+          gap: 10px;
+          margin-bottom: 10px;
+          transition: 0.5s;
+          @apply py-2;
+          @apply text-custom-gray;
+          &:hover {
+            background-color: #ddf0ff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.MakeItDown {
+  transform: rotate(-180deg);
+}
+
+.open {
+  .navBar {
+    width: 300px;
+  }
+}
+
+@media (max-width: 900px) {
+  .navBar {
+    width: 60px;
+    transition: width 0.3s ease;
+
+    .openNav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.5s;
+    }
+    .logo {
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      img {
+        width: 40px;
+      }
+      span {
+        display: none;
+      }
+    }
+    .content {
+      nav {
+        a {
+          gap: 5px !important;
+          span {
+            display: none;
+          }
+        }
+      }
+    }
+
+    // لما الـ navbar يفتح
+    &.nav-opened {
+      width: 300px;
+
+      .logo {
+        padding-left: 20px;
+        justify-content: start;
+        span {
+          display: inline;
+        }
+      }
+
+      .content nav a span {
+        display: block;
+      }
+
+      .openNav {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .user {
+    max-width: 100%;
+    .info {
+      display: none;
+    }
+  }
+
+  .navBar.nav-opened .user .info {
+    display: block;
+  }
+}
