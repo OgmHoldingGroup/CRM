@@ -1,6 +1,8 @@
 <div class="login-content flex min-h-screen">
   <div class="left-sec bg-white basis-1/2 relative">
     <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
       class="w-[700px] p-20 flex items-center justify-center flex-col absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
     >
       <div class="header flex items-center justify-center flex-col mb-20">
@@ -16,17 +18,26 @@
       <div class="inputs">
         <div class="input-group mb-5">
           <label for="userName">Username</label>
-          <input type="text" id="userName" />
+          <input type="text" id="userName" formControlName="userName" />
+          @if(loginForm.get('userName')?.invalid&&loginForm.get('userName')?.touched){
+          <small class="err-msg">please enter valid userName or Email.</small>
+          }
         </div>
         <div class="input-group">
           <label for="password">Password</label>
-          <input type="password" id="password" />
+          <input type="password" id="password" formControlName="password" />
+          @if(loginForm.get('password')?.invalid&&loginForm.get('password')?.touched){
+          <small class="err-msg">please enter Your Password.</small> }
         </div>
-        <a href="#" class="forget self-end text-custom-baby-blue text-[15px]"
+        <a
+          routerLink="/change-password"
+          class="forget self-end text-custom-baby-blue text-[15px]"
           >Forget Password?</a
         >
       </div>
       <button
+        [disabled]="loginForm.invalid"
+        [ngStyle]="{ opacity: loginForm.invalid ? '0.5' : '1' }"
         class="w-[400px] mt-5 bg-custom-baby-blue text-white py-4 font-medium rounded"
       >
         Login
