@@ -60,6 +60,9 @@
 }
 
 @media (max-width: 480px) {
+  .login-content {
+    min-height: 80vh;
+  }
   .header {
     text-align: center;
   }
