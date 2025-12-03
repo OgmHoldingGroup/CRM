@@ -1,0 +1,42 @@
+.inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    label {
+      @apply text-custom-baby-blue;
+      margin-left: 8px;
+      font-weight: 500;
+    }
+    input {
+      width: 400px;
+      height: 50px;
+      border-radius: 5px;
+      outline: 0;
+      @apply pl-5;
+      border: 0.5px solid;
+      @apply border-custom-baby-blue;
+    }
+  }
+}
+
+.right-sec {
+  background: url("../../../../public/imgs/shared/landing.jpg");
+  background-size: cover;
+}
+
+@media (max-width: 800px) {
+  .login-content {
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    .right-sec {
+      display: none;
+    }
+  }
+}
