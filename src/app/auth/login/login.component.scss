@@ -35,6 +35,23 @@
     padding: 10px;
     align-items: center;
     justify-content: center;
+    .left-sec {
+      flex-basis: 100%;
+      form {
+        width: 100%;
+        padding: 10px;
+        .inputs {
+          .input-group {
+            width: 100%;
+          }
+          input,
+          button {
+            // width: 100%;
+            max-width: 100%;
+          }
+        }
+      }
+    }
     .right-sec {
       display: none;
     }
