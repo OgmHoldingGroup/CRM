@@ -13,7 +13,11 @@
     <div class="operational-content content">
       <nav class="operational">
         @for (item of operational(); track $index) {
-        <a href="#">
+        <a
+          routerLink="{{ item.router }}"
+          routerLinkActive="on"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
           <img src="imgs/nav/operational/{{ item.file }}" alt="" />
           <span>{{ item.title }}</span>
         </a>

@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +16,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       userName: [
@@ -36,16 +39,16 @@ export class LoginComponent implements OnInit {
       ],
     });
   }
-  loginForm!: FormGroup;
 
-  private fb = inject(FormBuilder);
   createForm() {}
   onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
+    } else {
+      console.log(this.loginForm.value);
+      this.router.navigate(['/home']);
     }
-    console.log(this.loginForm.value);
   }
 }
 

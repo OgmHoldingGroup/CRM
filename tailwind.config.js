@@ -7,6 +7,8 @@ module.exports = {
         "custom-gray": "#7c7b84",
         "custom-blue": "#001A36",
         "custom-baby-blue": "#0060AB",
+        "custom-border": "#B0CEE5",
+        "custom-label": "#00579C",
       },
     },
   },

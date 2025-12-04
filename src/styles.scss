@@ -13,3 +13,6 @@ body {
 .err-msg {
   @apply py-3 text-red-500;
 }
+select {
+  -webkit-appearance: none;
+}

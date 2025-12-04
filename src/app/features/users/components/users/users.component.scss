@@ -1,0 +1,155 @@
+label {
+  top: -10px;
+  left: 25px;
+  background: white;
+  padding: 2px;
+  font-weight: 500;
+}
+
+.filters-content {
+  border: 1px solid #d8d8d8;
+  border-bottom-color: transparent;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.table {
+  .header,
+  .user {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 120px 50px;
+    align-items: center;
+    padding: 14px 12px;
+    column-gap: 12px;
+  }
+  .header {
+    p {
+      font-weight: 600;
+      font-size: 16px;
+      margin: 0;
+    }
+  }
+  .users-content {
+    border: 1px solid #d8d8d8;
+    border-top: none;
+
+    .user {
+      border-bottom: 1px solid #eee;
+
+      p,
+      label {
+        display: block;
+        font-size: 16px;
+        margin: 0;
+        color: #282828;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 400;
+      }
+
+      img {
+        width: 24px;
+        justify-self: center;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@media (max-width: 1550px) {
+  .grid-system {
+    margin-top: 10px;
+  }
+}
+@media (max-width: 1000px) {
+  header {
+    flex-wrap: wrap;
+    .actions {
+      margin-top: 15px;
+      flex-wrap: wrap;
+      .new-user {
+        width: 100%;
+      }
+    }
+  }
+  .filters {
+    .searchByName,
+    div {
+      width: 100%;
+      @apply py-0;
+    }
+  }
+  .table {
+    overflow-x: auto;
+    display: block;
+    padding-bottom: 10px;
+  }
+
+  .table .header,
+  .table .user {
+    min-width: 900px;
+  }
+  .switch {
+    margin-left: 10px;
+  }
+}
+
+/* From Uiverse.io by arghyaBiswasDev */
+/* The switch - the box around the slider */
+.switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 22px;
+  top: 0;
+  left: 0;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  border: 1px solid #adb5bd;
+  transition: 0.4s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  left: 5px;
+  bottom: 1px;
+  background-color: #adb5bd;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #0060ab;
+  border: 1px solid #007bff;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #007bff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(1.4em);
+  background-color: #fff;
+}

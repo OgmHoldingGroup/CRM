@@ -1,0 +1,142 @@
+<div class="users-content px-5">
+  <header class="pt-10 px-5 flex items-center justify-between mb-16">
+    <div class="title-content flex items-center gap-3">
+      <img src="imgs/shared/Back.png" alt="" />
+
+      <h3 class="title text-[#282828] text-3xl font-bold">Users</h3>
+    </div>
+    <div class="actions flex items-center gap-3">
+      <img src="imgs/shared/export.png" alt="" />
+      <img src="imgs/shared/noti.png" alt="" />
+      <button
+        class="new-user bg-custom-baby-blue text-white rounded-lg w-60 flex items-center justify-center gap-2 px-6 py-3"
+      >
+        <img src="imgs/shared/add-circle.png" alt="" />
+        <span>New user</span>
+      </button>
+    </div>
+  </header>
+  <div
+    class="filters-content flex-wrap flex items-center justify-between px-7 py-5"
+  >
+    <div class="filters flex items-centers gap-4 flex-wrap">
+      <input
+        type="search"
+        name="searchByName"
+        id="searchByName"
+        placeholder="Search by Name or Username"
+        class="searchByName text-[#6F6F6F] w-[532px] rounded-lg h-14 border border-custom-border"
+      />
+      <div class="role flex flex-col gap-1 w-72 relative h-14">
+        <label
+          for="role"
+          class="text-custom-label text-sm font-medium absolute top-0"
+          >Role</label
+        >
+
+        <select
+          id="role"
+          name="role"
+          class="w-full h-full cursor-pointer border border-custom-border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-custom-border focus:border-custom-border"
+        >
+          <option value="">Choose</option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="user">User</option>
+        </select>
+        <img
+          src="imgs/shared/down.png"
+          alt=""
+          class="absolute w-3 right-3 top-6 cursor-pointer"
+        />
+      </div>
+      <div class="active flex flex-col gap-1 w-72 relative h-14">
+        <label
+          for="role"
+          class="text-custom-label text-sm font-medium absolute top-0"
+          >Status</label
+        >
+
+        <select
+          id="role"
+          name="role"
+          class="w-full h-full border border-custom-border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-custom-border focus:border-custom-border"
+        >
+          <option value="">Choose</option>
+          <option value="active">Active</option>
+          <option value="disactive">DisActive</option>
+        </select>
+        <img
+          src="imgs/shared/down.png"
+          alt=""
+          class="absolute w-3 right-3 top-6 cursor-pointer"
+        />
+      </div>
+      <img src="imgs/shared/searchButton.png" class="p-1" alt="" />
+    </div>
+
+    <div
+      class="grid-system w-44 h-14 relative flex items-center gap-3 border border-[#D8D8D8] px-1 rounded-lg"
+    >
+      <img src="imgs/shared/grid.png" alt="" class="cursor-pointer" />
+      <select name="cols" id="cols">
+        <option value="columns">Columns</option>
+        <option value="columns">1</option>
+        <option value="columns">2</option>
+        <option value="columns">3</option>
+        <option value="columns">4</option>
+        <option value="columns">5</option>
+      </select>
+      <p
+        class="w-5 h-5 flex items-center justify-center p-2 rounded-[50%] bg-black text-white"
+      >
+        5
+      </p>
+      <img src="imgs/shared/black-down.png" alt="" class="w-3 cursor-pointer" />
+    </div>
+  </div>
+
+  <div class="table w-full">
+    <div
+      class="header text-xl font-semibold bg-custom-label text-[#FDFDFD] px-3 py-4"
+    >
+      <p>Full Name</p>
+      <p>Username</p>
+      <p>Mobile Number</p>
+      <p class="roles">Roles</p>
+      <p>Last Login</p>
+      <p>Creation Date</p>
+      <p>Status</p>
+      <p class="empty-col"></p>
+    </div>
+
+    <div class="users-content">
+      @for (user of users(); track user.id) {
+      <div class="user">
+        <p title="{{ user.full_name }}">{{ user.full_name }}</p>
+        <p title="{{ user.username }}">{{ user.username }}</p>
+        <p title="{{ user.mobile }}">{{ user.mobile }}</p>
+
+        <p>
+          @for (role of user.roles; track $index) {
+          {{ role }}<span *ngIf="!$last">, </span>
+          }
+        </p>
+
+        <p title="{{ user.last_login }}">{{ user.last_login }}</p>
+        <p title="{{ user.creation_date }}">{{ user.creation_date }}</p>
+        <label class="switch">
+          <input
+            type="checkbox"
+            [checked]="user.status === 'active'"
+            (change)="toggleStatus(user.id)"
+          />
+          <span class="slider"></span>
+        </label>
+
+        <img src="imgs/shared/more.png" />
+      </div>
+      }
+    </div>
+  </div>
+</div>
