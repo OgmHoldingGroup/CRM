@@ -1,3 +1,12 @@
+.role-wrapper .down-icon {
+  transition: transform 0.2s ease;
+}
+
+/* لما الـ select يتفتح (يأخد فوكس) اقلب الصورة */
+.role-wrapper:has(select:focus) .down-icon {
+  transform: rotate(180deg);
+}
+
 label {
   top: -10px;
   left: 25px;
@@ -35,6 +44,10 @@ label {
 
     .user {
       border-bottom: 1px solid #eee;
+      transition: 0.5s;
+      &:hover {
+        background: #eee;
+      }
 
       p,
       label {
@@ -152,4 +165,34 @@ input:focus + .slider {
 input:checked + .slider:before {
   transform: translateX(1.4em);
   background-color: #fff;
+}
+
+///########pagination##############
+.pagination {
+  button {
+    @apply w-10 h-10 rounded-[50%] text-[#535353];
+    &:hover {
+      @apply bg-custom-baby-blue text-white;
+    }
+    &.active-page {
+      @apply bg-custom-baby-blue text-white font-bold;
+      // منع تغيير التنسيق عند الـ hover للصفحة النشطة
+      &:hover {
+        @apply bg-custom-baby-blue text-white;
+      }
+    }
+  }
+}
+
+.pages {
+  option {
+    width: 200px;
+    text-align: center;
+    padding: 10px;
+
+    @apply bg-custom-baby-blue text-white;
+    &:hover {
+      @apply bg-white text-custom-baby-blue;
+    }
+  }
 }

@@ -1,0 +1,34 @@
+.overlay {
+  position: absolute;
+  background-color: #797373;
+  opacity: 0.5;
+  width: 100%;
+  height: 100vh;
+  z-index: 333;
+}
+.input-group {
+  @apply relative w-full mb-7;
+  .main {
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    @apply text-custom-label p-1 bg-white;
+    margin-left: 8px;
+    font-weight: 500;
+  }
+  input,
+  select {
+    padding-left: 15px;
+    width: 100%;
+    border-radius: 5px;
+    @apply h-12    border border-custom-baby-blue;
+  }
+}
+
+.date {
+  img {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+  }
+}

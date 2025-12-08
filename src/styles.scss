@@ -16,3 +16,16 @@ body {
 select {
   -webkit-appearance: none;
 }
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* For Firefox */
+input[type="datetime-local"] {
+  -moz-appearance: textfield;
+}

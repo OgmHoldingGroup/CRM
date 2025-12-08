@@ -1,4 +1,8 @@
-<div class="users-content px-5">
+@if(showCreateForm()){
+
+<app-create-user (close)="closeForm()" />
+}
+<div class="users-content px-5 relative">
   <header class="pt-10 px-5 flex items-center justify-between mb-16">
     <div class="title-content flex items-center gap-3">
       <img src="imgs/shared/Back.png" alt="" />
@@ -9,6 +13,7 @@
       <img src="imgs/shared/export.png" alt="" />
       <img src="imgs/shared/noti.png" alt="" />
       <button
+        (click)="openForm()"
         class="new-user bg-custom-baby-blue text-white rounded-lg w-60 flex items-center justify-center gap-2 px-6 py-3"
       >
         <img src="imgs/shared/add-circle.png" alt="" />
@@ -21,13 +26,14 @@
   >
     <div class="filters flex items-centers gap-4 flex-wrap">
       <input
+        (input)="searchText.set($any($event.target).value || null)"
         type="search"
         name="searchByName"
         id="searchByName"
         placeholder="Search by Name or Username"
-        class="searchByName text-[#6F6F6F] w-[532px] rounded-lg h-14 border border-custom-border"
+        class="searchByName pl-3 text-[#6F6F6F] w-[532px] rounded-lg h-14 border border-custom-border"
       />
-      <div class="role flex flex-col gap-1 w-72 relative h-14">
+      <div class="role role-wrapper flex flex-col gap-1 w-72 relative h-14">
         <label
           for="role"
           class="text-custom-label text-sm font-medium absolute top-0"
@@ -35,22 +41,27 @@
         >
 
         <select
+          (change)="searchRole.set($any($event.target).value || null)"
           id="role"
           name="role"
-          class="w-full h-full cursor-pointer border border-custom-border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-custom-border focus:border-custom-border"
+          class="role-select w-full h-full cursor-pointer border border-custom-border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-custom-border focus:border-custom-border"
         >
-          <option value="">Choose</option>
+          <option value="">All Roles</option>
           <option value="admin">Admin</option>
           <option value="manager">Manager</option>
           <option value="user">User</option>
+          <option value="editor">Editor</option>
+          <option value="viewer">Viewer</option>
+          <option value="moderator">Moderator</option>
+          <option value="guest">Guest</option>
         </select>
         <img
           src="imgs/shared/down.png"
           alt=""
-          class="absolute w-3 right-3 top-6 cursor-pointer"
+          class="down-icon pointer-events-none absolute w-3 right-3 top-6 cursor-pointer"
         />
       </div>
-      <div class="active flex flex-col gap-1 w-72 relative h-14">
+      <div class="active role-wrapper flex flex-col gap-1 w-72 relative h-14">
         <label
           for="role"
           class="text-custom-label text-sm font-medium absolute top-0"
@@ -58,9 +69,10 @@
         >
 
         <select
+          (change)="searchStatus.set($any($event.target).value || null)"
           id="role"
           name="role"
-          class="w-full h-full border border-custom-border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-custom-border focus:border-custom-border"
+          class="w-full h-full border cursor-pointer border-custom-border rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-custom-border focus:border-custom-border"
         >
           <option value="">Choose</option>
           <option value="active">Active</option>
@@ -69,7 +81,7 @@
         <img
           src="imgs/shared/down.png"
           alt=""
-          class="absolute w-3 right-3 top-6 cursor-pointer"
+          class="down-icon pointer-events-none absolute w-3 right-3 top-6 cursor-pointer"
         />
       </div>
       <img src="imgs/shared/searchButton.png" class="p-1" alt="" />
@@ -90,7 +102,7 @@
       <p
         class="w-5 h-5 flex items-center justify-center p-2 rounded-[50%] bg-black text-white"
       >
-        5
+        7
       </p>
       <img src="imgs/shared/black-down.png" alt="" class="w-3 cursor-pointer" />
     </div>
@@ -111,7 +123,7 @@
     </div>
 
     <div class="users-content">
-      @for (user of users(); track user.id) {
+      @for (user of paginatedUsers(); track user.id) {
       <div class="user">
         <p title="{{ user.full_name }}">{{ user.full_name }}</p>
         <p title="{{ user.username }}">{{ user.username }}</p>
@@ -137,6 +149,69 @@
         <img src="imgs/shared/more.png" />
       </div>
       }
+    </div>
+  </div>
+
+  <!-- <div class="card flex justify-end p-5 border border-[#eee] mt-5">
+    <p-paginator
+      class="flex items-center gap-2"
+      (onPageChange)="onPageChange($event)"
+      [first]="first()"
+      [rows]="rows()"
+      [totalRecords]="users().length"
+      [rowsPerPageOptions]="[5, 10, 15]"
+    />
+  </div> -->
+  <div
+    class="paginator-content flex gap-5 justify-end p-5 border border-[#eee] mt-5"
+  >
+    <div class="per p-3 bg-[#F3F3F3] flex items-center gap-2 rounded-lg">
+      <span class="text-[#535353]">Rows per page</span>
+      <!-- <span class="text-custom-baby-blue font-bold text-lg">{{ rows() }}</span> -->
+
+      <select
+        (change)="onRowsPerPageChange($event)"
+        class="text-custom-baby-blue pages outline-none font-bold text-lg bg-[#F3F3F3] border-none focus:ring-0 cursor-pointer"
+      >
+        <option value="5" [selected]="rows() === 5">5</option>
+        <option value="10" [selected]="rows() === 10">10</option>
+        <option value="15" [selected]="rows() === 15">15</option>
+      </select>
+    </div>
+
+    <div class="paginator flex items-center gap-1">
+      <img
+        src="imgs/shared/backward.png"
+        alt="Previous"
+        class="w-8 cursor-pointer"
+        (click)="prevPage()"
+        [class.opacity-50]="currentPage() === 1"
+      />
+
+      <div class="pagination flex items-center gap-1">
+        <ng-container *ngFor="let button of pageButtons()">
+          <button
+            *ngIf="button !== '...'"
+            (click)="goToPage(+button)"
+            [class.active-page]="currentPage() === button"
+          >
+            {{ button }}
+          </button>
+          <span
+            *ngIf="button === '...'"
+            class="text-[#535353] w-10 h-10 flex items-center justify-center"
+            >...</span
+          >
+        </ng-container>
+      </div>
+
+      <img
+        src="imgs/shared/forward.png"
+        alt="Next"
+        class="w-8 cursor-pointer"
+        (click)="nextPage()"
+        [class.opacity-50]="currentPage() === totalPages()"
+      />
     </div>
   </div>
 </div>
