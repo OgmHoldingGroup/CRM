@@ -19,10 +19,11 @@
       <div class="type flex items-center gap-1">
         <input
           type="radio"
-          name="activeDirectory"
+          name="userType"
           id="activeDirectory"
           value="activeDirectory"
           [(ngModel)]="selectedUserType"
+          [ngModelOptions]="{ standalone: true }"
           (change)="onUserTypeChange('activeDirectory')"
         />
         <label for="activeDirectory">Active Directory</label>
@@ -30,10 +31,11 @@
       <div class="type flex items-center gap-1">
         <input
           type="radio"
-          name="newUser"
+          name="userType"
           id="newUser"
           value="newUser"
           [(ngModel)]="selectedUserType"
+          [ngModelOptions]="{ standalone: true }"
           (change)="onUserTypeChange('newUser')"
         />
         <label for="newUser">New User</label>
@@ -41,162 +43,327 @@
     </div>
   </div>
 
-  <form>
+  <form [formGroup]="form">
     <div
-      class="input-group pb-5 border-b border-[#D8D8D8] flex items-center gap-1"
+      class="input-group pb-5 border-b border-[#D8D8D8] flex flex-col items-start gap-1"
     >
-      <label for="userName" class="main">Username*</label>
-      <input
-        type="text"
-        id="userName"
-        style="width: 90%"
-        placeholder="Write it here .."
-        [ngStyle]="{
-          width: selectedUserType === 'newUser' ? '100%' : '90%'
-        }"
-      />
+      <div class="w-full flex items-center gap-1">
+        <input
+          type="text"
+          id="userName"
+          formControlName="userName"
+          name="userName"
+          placeholder="Write it here .."
+          [ngStyle]="{
+            width: selectedUserType === 'newUser' ? '100%' : '90%'
+          }"
+          [class.border-red-500]="
+            form.get('userName')?.touched && form.get('userName')?.invalid
+          "
+          [class.border-green-500]="userFound"
+        />
+        <label for="userName" class="main">Username*</label>
 
-      @if(selectedUserType === 'activeDirectory'){
-
-      <img src="imgs/shared/importUser.png" alt="" />
+        @if(selectedUserType === 'activeDirectory'){
+        <img
+          src="imgs/shared/importUser.png"
+          alt="Import from Active Directory"
+          class="cursor-pointer hover:opacity-70 transition-opacity"
+          (click)="fetchFromMainUserData()"
+          title="Click to import user data"
+        />
+        }
+      </div>
+      @if(form.get('userName')?.touched && form.get('userName')?.invalid){
+      <p class="text-red-500 text-sm mt-1 ml-3">Username is required</p>
+      } @if(userNotFound){
+      <p class="text-red-500 text-sm mt-1 ml-3 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        User not found in Active Directory
+      </p>
+      } @if(userFound){
+      <p class="text-green-600 text-sm mt-1 ml-3 flex items-center gap-1">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            clip-rule="evenodd"
+          />
+        </svg>
+        User data loaded successfully!
+      </p>
       }
     </div>
+
     <div class="input-group">
       <label for="fullName" class="main">Full Name</label>
-      <input type="text" id="fullName" placeholder="Write it here .." />
+      <input
+        type="text"
+        id="fullName"
+        formControlName="fullName"
+        placeholder="Write it here .."
+      />
     </div>
-    <div class="input-groups flex items-center gap-2">
-      <div class="input-group">
+
+    <div class="input-groups flex items-start gap-2">
+      <div class="input-group flex-1">
         <label for="Nickname" class="main">Nickname</label>
-        <input type="text" id="Nickname" placeholder="Write it here .." />
+        <input
+          type="text"
+          id="Nickname"
+          formControlName="nickname"
+          placeholder="Write it here .."
+        />
       </div>
-      <div class="input-group">
+      <div class="input-group flex-1">
         <label for="Mobile" class="main">Mobile No.</label>
-        <input type="text" id="Mobile" placeholder="Write it here .." />
+        <input
+          type="text"
+          id="Mobile"
+          formControlName="mobile"
+          placeholder="Write it here .."
+          [class.border-red-500]="
+            form.get('mobile')?.touched && form.get('mobile')?.invalid
+          "
+        />
+        @if(form.get('mobile')?.touched &&
+        form.get('mobile')?.hasError('pattern')){
+        <p class="text-red-500 text-xs mt-1">
+          Mobile must be 11 digits starting with 0
+        </p>
+        }
       </div>
     </div>
+
     <div class="input-group date">
       <label for="cancellationDate" class="main">Cancellation Date*</label>
       <input
         type="datetime-local"
         id="cancellationDate"
+        formControlName="cancellationDate"
         class="text-[#6F6F6F]"
+        [class.border-red-500]="
+          form.get('cancellationDate')?.touched &&
+          form.get('cancellationDate')?.invalid
+        "
       />
       <img src="imgs/shared/calendar.png" alt="" class="w-7" />
+      @if(form.get('cancellationDate')?.touched &&
+      form.get('cancellationDate')?.invalid){
+      <p class="text-red-500 text-sm mt-1">Cancellation date is required</p>
+      }
     </div>
-    @if(selectedUserType === 'newUser'){
 
+    @if(selectedUserType === 'newUser'){
     <div
-      class="input-group pb-5 border-b border-[#D8D8D8] flex items-center gap-1"
+      class="input-group pb-5 border-b border-[#D8D8D8] flex flex-col items-start gap-1"
     >
-      <label for="password" class="main">Password*</label>
-      <input type="password" id="password" placeholder="Write it here .." />
-      <img src="imgs/shared/again.png" alt="" />
+      <div class="w-full flex items-center gap-1">
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Write it here .."
+          [class.border-red-500]="
+            form.get('password')?.touched && form.get('password')?.invalid
+          "
+        />
+        <label for="password" class="main">Password*</label>
+        <img src="imgs/shared/again.png" alt="" class="cursor-pointer" />
+      </div>
+      @if(form.get('password')?.touched && form.get('password')?.invalid){
+      @if(form.get('password')?.hasError('required')){
+      <p class="text-red-500 text-sm mt-1 ml-3">Password is required</p>
+      } @if(form.get('password')?.hasError('minlength')){
+      <p class="text-red-500 text-sm mt-1 ml-3">
+        Password must be at least 6 characters
+      </p>
+      } }
     </div>
     }
+
     <div class="input-group">
-      <label for="Department" class="main">Department</label>
-      <select name="Department" id="Department" class="text-[#6F6F6F]">
-        <option value="1">Choose</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
+      <label for="Department" class="main">Department*</label>
+      <select
+        name="Department"
+        id="Department"
+        formControlName="department"
+        class="text-[#6F6F6F]"
+        [class.border-red-500]="
+          form.get('department')?.touched && form.get('department')?.invalid
+        "
+      >
+        <option value="">Choose</option>
+        <option value="1">Department 1</option>
+        <option value="2">Department 2</option>
+        <option value="3">Department 3</option>
       </select>
       <img
-        _ngcontent-ng-c4043766655=""
         src="imgs/shared/down.png"
         alt=""
-        class="absolute w-3 right-3 top-6 cursor-pointer"
+        class="absolute w-3 right-3 top-6 cursor-pointer pointer-events-none"
       />
+      @if(form.get('department')?.touched && form.get('department')?.invalid){
+      <p class="text-red-500 text-sm mt-1">Department is required</p>
+      }
     </div>
-    <div class="input-groups flex items-center gap-2">
-      <div class="input-group">
-        <label for="division" class="main">Division</label>
-        <select name="division" id="division" class="text-[#6F6F6F]">
-          <option value="1">Choose</option>
-          <option value="1">1</option>
-          <option value="1">1</option>
-          <option value="1">1</option>
+
+    <div class="input-groups flex items-start gap-2">
+      <div class="input-group flex-1">
+        <label for="division" class="main">Division*</label>
+        <select
+          name="division"
+          id="division"
+          formControlName="division"
+          class="text-[#6F6F6F]"
+          [class.border-red-500]="
+            form.get('division')?.touched && form.get('division')?.invalid
+          "
+        >
+          <option value="">Choose</option>
+          <option value="1">Division 1</option>
+          <option value="2">Division 2</option>
+          <option value="3">Division 3</option>
         </select>
         <img
-          _ngcontent-ng-c4043766655=""
           src="imgs/shared/down.png"
           alt=""
-          class="absolute w-3 right-3 top-6 cursor-pointer"
+          class="absolute w-3 right-3 top-6 cursor-pointer pointer-events-none"
         />
+        @if(form.get('division')?.touched && form.get('division')?.invalid){
+        <p class="text-red-500 text-xs mt-1">Required</p>
+        }
       </div>
-      <div class="input-group">
-        <label for="sector" class="main">Sector</label>
-        <select name="sector" id="sector" class="text-[#6F6F6F]">
-          <option value="1">Choose</option>
-          <option value="1">1</option>
-          <option value="1">1</option>
-          <option value="1">1</option>
+      <div class="input-group flex-1">
+        <label for="sector" class="main">Sector*</label>
+        <select
+          name="sector"
+          id="sector"
+          formControlName="sector"
+          class="text-[#6F6F6F]"
+          [class.border-red-500]="
+            form.get('sector')?.touched && form.get('sector')?.invalid
+          "
+        >
+          <option value="">Choose</option>
+          <option value="1">Sector 1</option>
+          <option value="2">Sector 2</option>
+          <option value="3">Sector 3</option>
         </select>
         <img
-          _ngcontent-ng-c4043766655=""
           src="imgs/shared/down.png"
           alt=""
-          class="absolute w-3 right-3 top-6 cursor-pointer"
+          class="absolute w-3 right-3 top-6 cursor-pointer pointer-events-none"
         />
+        @if(form.get('sector')?.touched && form.get('sector')?.invalid){
+        <p class="text-red-500 text-xs mt-1">Required</p>
+        }
       </div>
     </div>
+
     <div class="input-group">
-      <label for="controlCenter" class="main">Control Center</label>
-      <select name="controlCenter" id="controlCenter" class="text-[#6F6F6F]">
-        <option value="1">Choose</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
+      <label for="controlCenter" class="main">Control Center*</label>
+      <select
+        name="controlCenter"
+        id="controlCenter"
+        formControlName="controlCenter"
+        class="text-[#6F6F6F]"
+        [class.border-red-500]="
+          form.get('controlCenter')?.touched &&
+          form.get('controlCenter')?.invalid
+        "
+      >
+        <option value="">Choose</option>
+        <option value="1">Control Center 1</option>
+        <option value="2">Control Center 2</option>
+        <option value="3">Control Center 3</option>
       </select>
       <img
-        _ngcontent-ng-c4043766655=""
         src="imgs/shared/down.png"
         alt=""
-        class="absolute w-3 right-3 top-6 cursor-pointer"
+        class="absolute w-3 right-3 top-6 cursor-pointer pointer-events-none"
       />
+      @if(form.get('controlCenter')?.touched &&
+      form.get('controlCenter')?.invalid){
+      <p class="text-red-500 text-sm mt-1">Control Center is required</p>
+      }
     </div>
+
     <div class="input-group">
-      <label for="role" class="main">Role(s) </label>
-      <select name="role" id="role" class="text-[#6F6F6F]">
-        <option value="1">Choose</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
+      <label for="role" class="main">Role(s)*</label>
+      <select
+        name="role"
+        id="role"
+        formControlName="role"
+        class="text-[#6F6F6F]"
+        [class.border-red-500]="
+          form.get('role')?.touched && form.get('role')?.invalid
+        "
+      >
+        <option value="">Choose</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="moderator">Moderator</option>
+        <option value="viewer">Viewer</option>
       </select>
       <img
-        _ngcontent-ng-c4043766655=""
         src="imgs/shared/down.png"
         alt=""
-        class="absolute w-3 right-3 top-6 cursor-pointer"
+        class="absolute w-3 right-3 top-6 cursor-pointer pointer-events-none"
       />
+      @if(form.get('role')?.touched && form.get('role')?.invalid){
+      <p class="text-red-500 text-sm mt-1">Role is required</p>
+      }
     </div>
+
     <div
-      class="input-group pb-5 border-b border-[#D8D8D8] flex items-center gap-1"
+      class="input-group pb-5 border-b border-[#D8D8D8] flex flex-col items-start gap-1"
     >
-      <label for="Status" class="main">Status</label>
-      <select name="Status" id="Status" class="text-[#6F6F6F]">
-        <option value="1">Choose</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
-        <option value="1">1</option>
+      <label for="Status" class="main">Status*</label>
+      <select
+        name="Status"
+        id="Status"
+        formControlName="status"
+        class="text-[#6F6F6F] w-full"
+        [class.border-red-500]="
+          form.get('status')?.touched && form.get('status')?.invalid
+        "
+      >
+        <option value="">Choose</option>
+        <option value="active">Active</option>
+        <option value="disactive">Disactive</option>
+        <option value="pending">Pending</option>
       </select>
       <img
-        _ngcontent-ng-c4043766655=""
         src="imgs/shared/down.png"
         alt=""
-        class="absolute w-3 right-3 top-6 cursor-pointer"
+        class="absolute w-3 right-3 top-6 cursor-pointer pointer-events-none"
       />
+      @if(form.get('status')?.touched && form.get('status')?.invalid){
+      <p class="text-red-500 text-sm mt-1">Status is required</p>
+      }
     </div>
   </form>
+
   <div class="actions flex items-center justify-end gap-5 p-3">
     <button
+      type="button"
+      (click)="closeForm()"
       class="w-72 h-12 border border-custom-baby-blue rounded-lg text-custom-baby-blue font-semibold text-xl transition-all hover:bg-custom-baby-blue hover:text-white"
     >
       Cancel
     </button>
     <button
-      class="w-72 h-12 border border-custom-baby-blue rounded-lg h hover:text-custom-baby-blue hover:bg-white font-semibold text-xl transition-all bg-custom-baby-blue text-white"
+      type="submit"
+      [disabled]="form.invalid"
+      (click)="onSubmit()"
+      class="w-72 h-12 border border-custom-baby-blue rounded-lg font-semibold text-xl transition-all bg-custom-baby-blue text-white hover:bg-opacity-90 disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
     >
       Create User
     </button>
